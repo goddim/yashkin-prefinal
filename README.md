@@ -214,7 +214,7 @@ resource "yandex_lb_network_load_balancer" "balancer" {
 
 Следовательно, балансировщик нагрузки работает.
 
-Теперь нужно проверить, будет ли сохраняться доступность сайта после отключения пары виртуальных машин. Для этого выключаю две виртуальные машины их трех:
+Теперь нужно проверить, будет ли сохраняться доступность сайта после отключения пары виртуальных машин. Для этого выключаю две виртуальные машины из трех:
 
 ![img_7](IMG/img_7.png)
 
@@ -341,7 +341,7 @@ resource "yandex_alb_load_balancer" "application-balancer" {
         external_ipv4_address {
         }
       }
-      ports = [ 9000 ]
+      ports = [ 80 ]
     }
     http {
       handler {
@@ -353,6 +353,20 @@ resource "yandex_alb_load_balancer" "application-balancer" {
  depends_on = [
     yandex_alb_http_router.http-router
 ] 
+}
+```
+
+За проверку состояния будет отвечать Healthcheck:
+
+```
+healthcheck {
+      timeout              = "10s"
+      interval             = "2s"
+      healthy_threshold    = 10
+      unhealthy_threshold  = 15 
+      http_healthcheck {
+        path               = "/"
+      }
 }
 ```
 
