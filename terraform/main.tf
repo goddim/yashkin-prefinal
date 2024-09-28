@@ -1,6 +1,6 @@
 locals {
-  ssh-keys = file("~/.ssh/id_ed25519.pub")
-  ssh-private-keys = file("~/.ssh/id_ed25519")
+  ssh-keys = file("~/dim1.pub")
+  ssh-private-keys = file("~/dim1")
 }
 
 resource "yandex_vpc_network" "develop" {
