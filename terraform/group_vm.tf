@@ -81,7 +81,7 @@ resource "yandex_compute_instance_group" "group-vms" {
     user-data  = <<EOF
 #!/bin/bash
 cd /var/www/html
-echo '<html><head><title>Picture of my cat</title></head> <body><h1>Look at my cat</h1><img src="http://${yandex_storage_bucket.fedorchukds.bucket_domain_name}/deadline-cat.jpg"/></body></html>' > index.html
+echo '<html><head><title>my image</title></head> <body><h1>Look at my image</h1><img src="http://${yandex_storage_bucket.yashkin.bucket_domain_name}/image.jpg"/></body></html>' > index.html
 EOF
     }
   }
