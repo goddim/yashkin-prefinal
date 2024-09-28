@@ -1,5 +1,3 @@
-![image](https://github.com/user-attachments/assets/69a314c8-7a28-4a47-a9af-86dd9daf605a)
-
 # Домашнее задание к занятию «Вычислительные мощности. Балансировщики нагрузки»
 
 ## Задание 1. Yandex Cloud 
