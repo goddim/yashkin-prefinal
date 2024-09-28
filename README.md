@@ -1,4 +1,4 @@
-
+![image](https://github.com/user-attachments/assets/69a314c8-7a28-4a47-a9af-86dd9daf605a)
 
 # Домашнее задание к занятию «Вычислительные мощности. Балансировщики нагрузки»
 
@@ -75,11 +75,11 @@ locals {
 Загружу в бакет файл с картинкой:
 
 ```
-resource "yandex_storage_object" "deadline-picture" {
+resource "yandex_storage_object" "image" {
   access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
   bucket = local.bucket_name
-  key    = "deadline-cat"
+  key    = "image"
   source = "~/image.jpg"
   acl = "public-read"
   depends_on = [yandex_storage_bucket.yashkin]
@@ -91,9 +91,8 @@ resource "yandex_storage_object" "deadline-picture" {
 
 Проверю созданный бакет:
 
-![img_1](IMG/img_1.png)
+![image](https://github.com/user-attachments/assets/14ea8de1-0a10-47ca-8f06-0d488ba7f5aa)
 
-![img_2](IMG/img_2.png)
 
 Бакет создан и имеет в себе один объект.
 
@@ -140,7 +139,7 @@ resource "yandex_vpc_subnet" "public" {
     user-data  = <<EOF
 #!/bin/bash
 cd /var/www/html
-echo '<html><head><title>Picture of my cat</title></head> <body><h1>Look at my cat</h1><img src="http://${yandex_storage_bucket.yashkin.bucket_domain_name}/image.jpg"/></body></html>' > index.html
+echo '<html><head><title>my image</title></head> <body><h1>Look at my image</h1><img src="http://${yandex_storage_bucket.yashkin.bucket_domain_name}/image.jpg"/></body></html>' > index.html
 EOF
 ```
 
@@ -161,7 +160,8 @@ EOF
 
 После применения кода Terraform получаем три настроенные по шаблону LAMP виртуальные машины:
 
-![img_3](IMG/img_3.png)
+![image](https://github.com/user-attachments/assets/a1ac07d6-788c-4594-abdc-4b4211ea6bde)
+
 
 3. Создам сетевой балансировщик и подключу к нему группу виртуальных машин:
 
@@ -197,29 +197,28 @@ resource "yandex_lb_network_load_balancer" "balancer" {
 
 Проверю статус балансировщика нагрузки и подключенной к нему группе виртуальных машин после применения кода:
 
-![img_4](IMG/img_4.png)
+![image](https://github.com/user-attachments/assets/f0f7a531-eea3-497d-a553-8f2a3b33844a)
+
 
 Балансировщик нагрузки создан и активен, подключенные к нему виртуальные машины в статусе "HEALTHY".
 
 Проверю доступность сайта, через балансировщик нагрузки, открыв его внешний ip-адрес. Но для начала, нужно найти его внешний ip-адрес:
 
-![img_5](IMG/img_5.png)
+![image](https://github.com/user-attachments/assets/7471a3e9-35a0-4a01-b5fc-a4e6e2e05118)
 
 Открыв внешний ip-адрес балансировщика нагрузки я попадаю на созданную мной страницу:
 
-![img_6](IMG/img_6.png)
+![image](https://github.com/user-attachments/assets/1f542bc6-9ac8-4858-8083-ea5da1cd3371)
 
 Следовательно, балансировщик нагрузки работает.
 
-Теперь нужно проверить, будет ли сохраняться доступность сайта после отключения пары виртуальных машин. Для этого выключаю две виртуальные машины из трех:
-
-![img_7](IMG/img_7.png)
-
-Сайт по прежнему доступен, так как одна из виртуальных машин продолжила работать и балансировщик нагрузки переключился на неё.
+Теперь нужно проверить, будет ли сохраняться доступность сайта после отключения виртуальной машин. 
+Сайт по прежнему доступен, так как 2 из 3 виртуальных машин продолжили работать и балансировщик нагрузки переключил на них.
 
 Через некоторое время, после срабатывания Healthcheck, выключенные виртуальные машины LAMP были заново запущены:
 
-![img_8](IMG/img_8.png)
+![image](https://github.com/user-attachments/assets/19014cc2-2d9b-41a2-acfc-3236c4187e2e)
+
 
 Таким образом доступность сайта была сохранена.
 
@@ -367,17 +366,22 @@ healthcheck {
 
 Проверю созданные ресурсы после применения кода:
 
-![img_9](IMG/img_9.png)
+![image](https://github.com/user-attachments/assets/361cd3de-5b50-4780-bd99-8ea49f107752)
+
 
 Все ресурсы создались.
 
 Проверю, откроется ли сайт по внешнему адресу Application Load Balancer:
+![image](https://github.com/user-attachments/assets/82eb22d4-1ef7-4af3-92c0-68615b3c08ab)
 
-![img_10](IMG/img_10.png)
+
+![image](https://github.com/user-attachments/assets/b2fe41c9-5f1d-418d-bd2f-cd16172ecad7)
+
 
 Сайт открывается, Application Load Balancer работает.
 
 После применения всего кода Terraform получаем следующий Output:
 
-![img_11](IMG/img_11.png)
+![image](https://github.com/user-attachments/assets/979b40df-9b90-43cf-aa3a-5663f5999e7f)
+
 
