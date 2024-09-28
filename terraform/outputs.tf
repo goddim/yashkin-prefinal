@@ -8,7 +8,7 @@ output "all_vms" {
 }
 
 output "Picture_URL" {
-  value = "https://${yandex_storage_bucket.fedorchukds.bucket_domain_name}/${yandex_storage_object.deadline-picture.key}"
+  value = "https://${yandex_storage_bucket.yashkin.bucket_domain_name}/${yandex_storage_object.image.key}"
   description = "Адрес загруженной в бакет картинки"
 }
 
