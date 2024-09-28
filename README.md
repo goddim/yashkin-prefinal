@@ -52,7 +52,7 @@ resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
 }
 
 // Создание бакета с использованием ключа
-resource "yandex_storage_bucket" "fedorchukds" {
+resource "yandex_storage_bucket" "yashkin" {
   access_key = yandex_iam_service_account_static_access_key.sa-static-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
   bucket = local.bucket_name
@@ -66,11 +66,10 @@ resource "yandex_storage_bucket" "fedorchukds" {
 locals {
     current_timestamp = timestamp()
     formatted_date = formatdate("DD-MM-YYYY", local.current_timestamp)
-    bucket_name = "fedorchukds-${local.formatted_date}"
+    bucket_name = "yashkins-${local.formatted_date}"
 }
 ```
 
-Код Terraform для создания бакета можно посмотреть в файле [bucket.tf](https://github.com/DemoniumBlack/fedorchukds-devops-33-52/blob/main/terraform/bucket.tf)
 
 
 Загружу в бакет файл с картинкой:
@@ -81,15 +80,14 @@ resource "yandex_storage_object" "deadline-picture" {
   secret_key = yandex_iam_service_account_static_access_key.sa-static-key.secret_key
   bucket = local.bucket_name
   key    = "deadline-cat"
-  source = "~/deadline-cat.jpg"
+  source = "~/image.jpg"
   acl = "public-read"
-  depends_on = [yandex_storage_bucket.fedorchukds]
+  depends_on = [yandex_storage_bucket.yashkin]
 }
 ```
 
 Источником картинки будет файл, лежащий в моей домашней директории, за публичность картинки будет отвечать параметр `acl = "public-read"`.
 
-Код Terraform для загрузки картинки можно посмотреть в файле [upload_image.tf](https://github.com/DemoniumBlack/fedorchukds-devops-33-52/blob/main/terraform/upload_image.tf)
 
 Проверю созданный бакет:
 
@@ -142,7 +140,7 @@ resource "yandex_vpc_subnet" "public" {
     user-data  = <<EOF
 #!/bin/bash
 cd /var/www/html
-echo '<html><head><title>Picture of my cat</title></head> <body><h1>Look at my cat</h1><img src="http://${yandex_storage_bucket.fedorchukds.bucket_domain_name}/deadline-cat.jpg"/></body></html>' > index.html
+echo '<html><head><title>Picture of my cat</title></head> <body><h1>Look at my cat</h1><img src="http://${yandex_storage_bucket.yashkin.bucket_domain_name}/image.jpg"/></body></html>' > index.html
 EOF
 ```
 
@@ -160,7 +158,6 @@ EOF
 
 Проверка здоровья будет выполняться каждые 30 секунд и будет считаться успешной, если подключение к порту 80 виртуальной машины происходит успешно в течении 10 секунд.
 
-Полный код Terraform для создания группы виртуальных машин можно посмотреть в файле [group_vm.tf](https://github.com/DemoniumBlack/fedorchukds-devops-33-52/blob/main/terraform/group_vm.tf)
 
 После применения кода Terraform получаем три настроенные по шаблону LAMP виртуальные машины:
 
@@ -225,8 +222,6 @@ resource "yandex_lb_network_load_balancer" "balancer" {
 ![img_8](IMG/img_8.png)
 
 Таким образом доступность сайта была сохранена.
-
-Полный код Terraform для создания сетевого балансировщика нагрузки можно посмотреть в файле [network_load_balancer.tf](https://github.com/DemoniumBlack/fedorchukds-devops-33-52/blob/main/terraform/network_load_balancer.tf)
 
 4. Создаю Application Load Balancer с использованием Instance group и проверкой состояния.
 
@@ -386,4 +381,3 @@ healthcheck {
 
 ![img_11](IMG/img_11.png)
 
-Весь код Terraform можно посмотреть по ссылке: https://github.com/DemoniumBlack/fedorchukds-devops-33-52/blob/main/terraform/
